@@ -1,6 +1,6 @@
 # outputTemp
 ## 数据结构
-   public static Map<String,Object> data(){
+      public static Map<String,Object> data(){
         //添加的数据
         Map<String, Object> data = new HashMap<>(3);
         //表格数据
