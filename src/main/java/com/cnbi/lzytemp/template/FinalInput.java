@@ -24,7 +24,7 @@ public class FinalInput {
         return wordMLPackage;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception{
         URL url =Thread.currentThread().getContextClassLoader().getResource("t.docx");
         String inputfilepath = url.toString().substring(5);
         SimpleDateFormat sdf = new SimpleDateFormat("", Locale.SIMPLIFIED_CHINESE);
@@ -34,11 +34,11 @@ public class FinalInput {
         CharMarkInput charMarkInput = new CharMarkInput();
         charMarkInput.saveWordPackage(output,outputfilepath);
     }
-    public static Map<String,Object> data(){
+    public static  Map<String,Object> data(){
         //添加的数据
         Map<String, Object> data = new HashMap<>(3);
         //表格数据
-        List<List<List>> tableLists =  new ArrayList<>();
+        /*List<List<List>> tableLists =  new ArrayList<>();
         List<List> tableList1 =  new ArrayList<>();
         List<List> tableList2 =  new ArrayList<>();
         List<List> rowList1 =  new ArrayList<>();
@@ -79,6 +79,43 @@ public class FinalInput {
         tableList2.add(rowList4);
         tableLists.add(tableList1);
         tableLists.add(tableList2);
+        data.put("table", tableLists);*/
+        List<List<List>> tableLists =  new ArrayList<>();
+        List<List> tableList1 =  new ArrayList<>();
+        List<List> tableList2 =  new ArrayList<>();
+        List<String> list1 = new ArrayList<String>();
+        List<String> list2 = new ArrayList<String>();
+        list1.add("11");
+        list1.add("12");
+        list1.add("13");
+        list1.add("14");
+        list1.add("15");
+        list1.add("16");
+        list2.add("21");
+        list2.add("22");
+        list2.add("23");
+        list2.add("24");
+        list2.add("25");
+        list2.add("26");
+        List<String> list3 = new ArrayList<String>();
+        List<String> list4 = new ArrayList<String>();
+        list3.add("31");
+        list3.add("32");
+        list3.add("33");
+        list3.add("34");
+        list4.add("41");
+        list4.add("42");
+        list4.add("43");
+        list4.add("44");
+        list4.add("45");
+        list4.add("46");
+
+        tableList1.add(list1);
+        tableList1.add(list2);
+        tableList2.add(list3);
+        tableList2.add(list4);
+        tableLists.add(tableList1);
+        tableLists.add(tableList2);
         data.put("table", tableLists);
         //书签数据
         Map<String,String> content = new HashMap<>();
@@ -98,8 +135,14 @@ public class FinalInput {
         charList2.add(new String[]{"乙2", "3", "2", "3"});
         charList2.add(new String[]{"丙2", "4", "3", "4"});
         charList2.add(new String[]{"丁2", "4", "3", "4"});
-        listChart.add(charList2);
+        List<String[]> charList3 = new ArrayList<>();
+        charList3.add(new String[]{"甲3", "2", "1", "2"});
+        charList3.add(new String[]{"乙3", "3", "2", "3"});
+        charList3.add(new String[]{"丙3", "4", "3", "4"});
+        charList3.add(new String[]{"丁3", "4", "3", "4"});
         listChart.add(charList1);
+        listChart.add(charList2);
+        listChart.add(charList3);
         data.put("chart",listChart);
         return data;
 

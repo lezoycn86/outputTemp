@@ -60,7 +60,8 @@ public class CharMarkInput {
                 ids.add(id);
             }
             int charNum = 0;
-            for (String id : ids) {
+            for (int i = ids.size()-1; i >= 0 ; i--) {
+                String id = ids.get(i);
                 //通过ID获取
                 Relationship relationship = rp.getRelationshipByID(id);
                 Chart chart = (Chart) rp.getPart(relationship);
@@ -70,39 +71,32 @@ public class CharMarkInput {
                 EmbeddedPackagePart epp = (EmbeddedPackagePart)chart.getRelationshipsPart().getPart(edataid);
                 ByteArrayInputStream bais = new ByteArrayInputStream(epp.getBytes());
                 SpreadsheetMLPackage epack =  XSLXUtils.loadExcelPackage(bais, null);
-
+                int num = xlsheet(epack, data, charNum);
                 File filetemp = File.createTempFile("temp", "xlsx");
                 epack.save(new FileOutputStream(filetemp), 1, null);
                 epp.setBinaryData(new FileInputStream(filetemp));
                 //修改xml数据
                 updateChart(chartSpace, data, charNum);
-                charNum =xlsheet(epack, data, charNum);
+                charNum = num;
             }
-        }
-    }
-
-    public void updateChart(CTChartSpace chartSpace,  Map<String, Object> data, int charNum){
-        List<List<String[]>> listData = (List<List<String[]>>) data.get("chart");
-        List<String[]> datas = listData.get(charNum);
-        List<Object> list = chartSpace.getChart().getPlotArea().getAreaChartOrArea3DChartOrLineChart();
-        for(int i = 0, size = list.size(); i < size ; i++){
-            Object obj = list.get(i);
-            List<SerContent> serlist = ((ListSer)obj).getSer();
-            //柱形图、条形图、折线图、饼图、面积图、圆环图、雷达图等
-            for(int j = 0; j < serlist.size(); j++){
-                SerContent ser = serlist.get(j);
-                CTStrVal strv =  ser.getTx().getStrRef().getStrCache().getPt().get(0);
-                strv.setV(strv.getV());
-                //类别名称
-                List<CTStrVal> strlist = ser.getCat().getStrRef().getStrCache().getPt();
-                //类别的值
-                List<CTNumVal> vallist = ser.getVal().getNumRef().getNumCache().getPt();
-                for(int k = 0; k < strlist.size(); k++ ){
-                    strlist.get(k).setV(datas.get(k)[0]);
-                    vallist.get(k).setV(datas.get(k)[j+1]);
-
-                }
-            }
+            /*for (String id : ids) {
+                //通过ID获取
+                Relationship relationship = rp.getRelationshipByID(id);
+                Chart chart = (Chart) rp.getPart(relationship);
+                CTChartSpace chartSpace = chart.getContents();
+                *//*修改Excel文件*//*
+                String edataid = chartSpace.getExternalData().getId();
+                EmbeddedPackagePart epp = (EmbeddedPackagePart)chart.getRelationshipsPart().getPart(edataid);
+                ByteArrayInputStream bais = new ByteArrayInputStream(epp.getBytes());
+                SpreadsheetMLPackage epack =  XSLXUtils.loadExcelPackage(bais, null);
+                int num = xlsheet(epack, data, charNum);
+                File filetemp = File.createTempFile("temp", "xlsx");
+                epack.save(new FileOutputStream(filetemp), 1, null);
+                epp.setBinaryData(new FileInputStream(filetemp));
+                //修改xml数据
+                updateChart(chartSpace, data, charNum);
+                charNum = num;
+            }*/
         }
     }
     /**
@@ -173,6 +167,57 @@ public class CharMarkInput {
         }
         charNum++;
         return charNum;
+    }
+    /**
+     * @Description: updateChart:更新图表数据
+     * @param: chartSpace
+     * @param: data
+     * @param: charNum
+     * @Return void
+     * @Author: cnbilzy
+     * @Date: 2019/8/22
+     */
+    public void updateChart(CTChartSpace chartSpace,  Map<String, Object> data, int charNum){
+        List<List<String[]>> listData = (List<List<String[]>>) data.get("chart");
+        List<String[]> datas = listData.get(charNum);
+        List<Object> list = chartSpace.getChart().getPlotArea().getAreaChartOrArea3DChartOrLineChart();
+        for(int i = 0, size = list.size(); i < size ; i++){
+            Object obj = list.get(i);
+            List<SerContent> serlist = ((ListSer)obj).getSer();
+            if(obj instanceof org.docx4j.dml.chart.CTScatterChart){
+                //散点图
+                for(int j = 0; j < serlist.size(); j++){
+                    SerContentXY ser = (SerContentXY) serlist.get(j);
+                    CTStrVal strv =  ser.getTx().getStrRef().getStrCache().getPt().get(0);
+                    //strv.setV(datas.get(0)[j+1]);
+                    strv.setV(strv.getV());
+                    //类别名称;
+                    List<CTNumVal> strlist = ser.getXVal().getNumRef().getNumCache().getPt();
+                    //类别的值
+                    List<CTNumVal> vallist = ser.getYVal().getNumRef().getNumCache().getPt();
+                    for(int k = 0; k < strlist.size(); k++ ){
+                        vallist.get(k).setV(datas.get(k)[list.size() == 1 ? j + 1 : i + 1]);
+                        strlist.get(k).setV(datas.get(k)[0]);
+                    }
+                }
+            }else {
+                //柱形图、条形图、折线图、饼图、面积图、圆环图、雷达图等
+                for (int j = 0; j < serlist.size(); j++) {
+                    SerContent ser = serlist.get(j);
+                    CTStrVal strv = ser.getTx().getStrRef().getStrCache().getPt().get(0);
+                    strv.setV(strv.getV());
+                    //类别名称
+                    List<CTStrVal> strlist = ser.getCat().getStrRef().getStrCache().getPt();
+                    //类别的值
+                    List<CTNumVal> vallist = ser.getVal().getNumRef().getNumCache().getPt();
+                    for (int k = 0; k < strlist.size(); k++) {
+                        vallist.get(k).setV(datas.get(k)[list.size() == 1 ? j + 1 : i + 1]);
+                        strlist.get(k).setV(datas.get(k)[0]);
+                        //vallist.get(k).setV(datas.get(k)[j+1]);
+                    }
+                }
+            }
+        }
     }
 
     /**

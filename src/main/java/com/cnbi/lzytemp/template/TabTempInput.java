@@ -166,16 +166,20 @@ public class TabTempInput {
      * @param: tc
      * @param: rowNum :行数
      * @param: startNum :当前单元格在本行所有不跨行、列的单元格的位置
-     * @param: conten     Map<String, List> content
+     * @param: conten     Map<String, List> content 插入的数据
      * @Return void
      * @Author: cnbilzy
      * @Date: 2019/8/20
      */
     public int setTcContent(Tc tc, Map<String, Object> content , int rowNum , int startNum, int tbNum) {
-        List<List<List<List>>> tableList = (List<List<List<List>>>) content.get("table");
+        //一行数据为List
+        //List<List<List<List>>> tableList = (List<List<List<List>>>) content.get("table");
+        List<List<List<String>>> tableList = (List<List<List<String>>>) content.get("table");
 
         List<Object> pList = tc.getContent();
-        List<List> conList = null;
+        //一行数据为List
+        //List<List> conList = null;
+        List<String> conList = null;
         if (rowNum > 0) {
             conList =  tableList.get(tbNum).get(rowNum-1);
         }
@@ -199,8 +203,7 @@ public class TabTempInput {
             TcPrInner.VMerge vm = tc.getTcPr().getVMerge();
             TcPrInner.GridSpan gridSpan = tc.getTcPr().getGridSpan();
             if ( vm == null && gridSpan == null && p.getContent() != null) {
-                Text text = new Text();
-                //清除获取单元格的内容
+                //清除获取单元格的内容 从第二行开始
                 if (rowNum > 0 && p.getContent() != null) {
                     //p.getContent().clear();
                     for (Object o : pList) {
@@ -211,7 +214,8 @@ public class TabTempInput {
                                     List<Object> content2 = ((R) o1).getContent();
                                     for (Object o2 : content2) {
                                         if (o2 instanceof  JAXBElement){
-                                            ((JAXBElement) o2).setValue(conList.get(0).get(startNum).toString());
+                                            //((JAXBElement) o2).setValue(conList.get(0).get(startNum).toString()); 一行数据一个List
+                                            ((JAXBElement) o2).setValue(conList.get(startNum));
                                             startNum++;
                                         }
                                     }
