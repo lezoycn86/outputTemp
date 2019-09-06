@@ -1,5 +1,6 @@
 package com.cnbi.lzytemp.template;
 
+import com.cnbi.lzytemp.utils.SortUtils;
 import com.cnbi.lzytemp.utils.XSLXUtils;
 import org.docx4j.TraversalUtil;
 import org.docx4j.dml.chart.*;
@@ -37,7 +38,7 @@ import java.util.Map;
  * @Copyright: 2019 www.cnbisoft.com Inc. All rights reserved
  * 注意：本内容仅限于安徽经邦软件有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
-public class CharMarkInput {
+public class ChartMarkInput {
     /**
      * @Description: insertChart :向图表中添加数据
      * @param: wordMLPackage
@@ -50,7 +51,6 @@ public class CharMarkInput {
      * @Date: 2019/8/22
      */
     public void insertChart(WordprocessingMLPackage wordMLPackage ,Map<String,Object> data) throws Exception {
-        if (data.containsKey("chart")) {
             MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
             RelationshipsPart rp = documentPart.getRelationshipsPart();
             List<Relationship> relationships = rp.getRelationshipsByType(Namespaces.SPREADSHEETML_CHART);
@@ -59,27 +59,11 @@ public class CharMarkInput {
                 String id = relationship.getId();
                 ids.add(id);
             }
+            //获取ID进行排序
+            ids = SortUtils.listSort(ids);
             int charNum = 0;
-            for (int i = ids.size()-1; i >= 0 ; i--) {
+            /*for (int i = ids.size()-1; i >= 0 ; i--) {
                 String id = ids.get(i);
-                //通过ID获取
-                Relationship relationship = rp.getRelationshipByID(id);
-                Chart chart = (Chart) rp.getPart(relationship);
-                CTChartSpace chartSpace = chart.getContents();
-                /*修改Excel文件*/
-                String edataid = chartSpace.getExternalData().getId();
-                EmbeddedPackagePart epp = (EmbeddedPackagePart)chart.getRelationshipsPart().getPart(edataid);
-                ByteArrayInputStream bais = new ByteArrayInputStream(epp.getBytes());
-                SpreadsheetMLPackage epack =  XSLXUtils.loadExcelPackage(bais, null);
-                int num = xlsheet(epack, data, charNum);
-                File filetemp = File.createTempFile("temp", "xlsx");
-                epack.save(new FileOutputStream(filetemp), 1, null);
-                epp.setBinaryData(new FileInputStream(filetemp));
-                //修改xml数据
-                updateChart(chartSpace, data, charNum);
-                charNum = num;
-            }
-            /*for (String id : ids) {
                 //通过ID获取
                 Relationship relationship = rp.getRelationshipByID(id);
                 Chart chart = (Chart) rp.getPart(relationship);
@@ -97,7 +81,25 @@ public class CharMarkInput {
                 updateChart(chartSpace, data, charNum);
                 charNum = num;
             }*/
-        }
+            for (String id : ids) {
+                //通过ID获取
+                Relationship relationship = rp.getRelationshipByID(id);
+                Chart chart = (Chart) rp.getPart(relationship);
+                CTChartSpace chartSpace = chart.getContents();
+                /*修改Excel文件*/
+                String edataid = chartSpace.getExternalData().getId();
+                EmbeddedPackagePart epp = (EmbeddedPackagePart)chart.getRelationshipsPart().getPart(edataid);
+                ByteArrayInputStream bais = new ByteArrayInputStream(epp.getBytes());
+                SpreadsheetMLPackage epack =  XSLXUtils.loadExcelPackage(bais, null);
+                int num = xlsheet(epack, data, charNum);
+                File filetemp = File.createTempFile("temp", "xlsx");
+                epack.save(new FileOutputStream(filetemp), 1, null);
+                epp.setBinaryData(new FileInputStream(filetemp));
+                //修改xml数据
+                updateChart(chartSpace, data, charNum);
+                charNum = num;
+            }
+
     }
     /**
      * @Description: xlsheet：替换chart对应的表格数据
@@ -231,7 +233,6 @@ public class CharMarkInput {
      * @Date: 2019/8/22
      */
     public void insertWords(Map<String,Object> data, WordprocessingMLPackage wPackage){
-        if (data.containsKey("bookmark")) {
             Map content = (Map) data.get("bookmark");
             // 提取正文
             MainDocumentPart mainDocumentPart = wPackage.getMainDocumentPart();
@@ -268,7 +269,7 @@ public class CharMarkInput {
                     p.getContent().add(r);
                 }
             }
-        }
+
     }
     /**
      * @Description: saveWordPackage：保存文档
@@ -286,6 +287,8 @@ public class CharMarkInput {
         }
         wordPackage.save(new File(filePath));
     }
+
+
 
 
 

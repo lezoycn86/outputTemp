@@ -7,9 +7,7 @@ import org.docx4j.wml.*;
 
 import javax.xml.bind.JAXBElement;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Title: TabTempInput
@@ -33,8 +31,6 @@ public class TabTempInput {
      * @Date: 2019/8/22
      */
     public void addTabData(WordprocessingMLPackage wordMLPackage,Map<String, Object> data) throws Docx4JException {
-
-        if (data.containsKey("table")) {
             //获取所有的表格
             List<Tbl> table = getTable(wordMLPackage);
             int tbNum = 0;
@@ -54,7 +50,7 @@ public class TabTempInput {
                 }
                 tbNum++;
             }
-        }
+
     }
 
     /**
@@ -174,14 +170,28 @@ public class TabTempInput {
     public int setTcContent(Tc tc, Map<String, Object> content , int rowNum , int startNum, int tbNum) {
         //一行数据为List
         //List<List<List<List>>> tableList = (List<List<List<List>>>) content.get("table");
-        List<List<List<String>>> tableList = (List<List<List<String>>>) content.get("table");
+        TreeMap<String,List<List>> tableLists = (TreeMap<String,List<List>>) content.get("table");
+        List<List> conList = null;
+        String key = null;
+        Set<Map.Entry<String, List<List>>> entries = tableLists.entrySet();
+        int i = 0;
+        for (Map.Entry<String, List<List>> entry : entries) {
+            //获取第几张表格
+            if (i == tbNum) {
+                //key表示从第几行开始
+                key = entry.getKey();
+                //整张表数据
+                conList = entry.getValue();
+            }
+            i++;
+        }
 
         List<Object> pList = tc.getContent();
         //一行数据为List
         //List<List> conList = null;
-        List<String> conList = null;
-        if (rowNum > 0) {
-            conList =  tableList.get(tbNum).get(rowNum-1);
+        List<List> rowList = null;
+        if (rowNum >= Integer.valueOf(key)) {
+            rowList =  conList.get(rowNum-Integer.valueOf(key));
         }
         
         P p = null;
@@ -203,8 +213,8 @@ public class TabTempInput {
             TcPrInner.VMerge vm = tc.getTcPr().getVMerge();
             TcPrInner.GridSpan gridSpan = tc.getTcPr().getGridSpan();
             if ( vm == null && gridSpan == null && p.getContent() != null) {
-                //清除获取单元格的内容 从第二行开始
-                if (rowNum > 0 && p.getContent() != null) {
+                //清除获取单元格的内容 从第某一行开始
+                if (rowNum >= Integer.valueOf(key) && p.getContent() != null) {
                     //p.getContent().clear();
                     for (Object o : pList) {
                         if (o instanceof P){
@@ -215,7 +225,7 @@ public class TabTempInput {
                                     for (Object o2 : content2) {
                                         if (o2 instanceof  JAXBElement){
                                             //((JAXBElement) o2).setValue(conList.get(0).get(startNum).toString()); 一行数据一个List
-                                            ((JAXBElement) o2).setValue(conList.get(startNum));
+                                            ((JAXBElement) o2).setValue(rowList.get(startNum));
                                             startNum++;
                                         }
                                     }
