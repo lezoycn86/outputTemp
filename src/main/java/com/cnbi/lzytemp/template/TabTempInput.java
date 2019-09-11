@@ -1,14 +1,12 @@
 package com.cnbi.lzytemp.template;
-
+import org.apache.commons.lang3.StringUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.*;
-
 import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.util.*;
-
 /**
  * @Title: TabTempInput
  * @Description:
@@ -19,7 +17,6 @@ import java.util.*;
  * 垂直合并标签：vMerge 属性：w:val等于restart表示垂直合并的开始
  */
 public class TabTempInput {
-
     /**
      * @Description: addTabData 向模板的表格中添加数据
      * @param: wordMLPackage
@@ -30,29 +27,27 @@ public class TabTempInput {
      * @Author: cnbilzy
      * @Date: 2019/8/22
      */
-    public void addTabData(WordprocessingMLPackage wordMLPackage,Map<String, Object> data) throws Docx4JException {
-            //获取所有的表格
-            List<Tbl> table = getTable(wordMLPackage);
-            int tbNum = 0;
-            //获取单个表
-            for (Tbl tbl: table) {
-                int rowNum = 0;
-                //获取所有的行
-                List<Tr> tblAllTr = getTblAllTr(tbl);
-                for (Tr tr : tblAllTr) {
-                    int startNum = 0;
-                    //获取所有的单元格
-                    List<Tc> trAllCell = getTrAllCell(tr);
-                    for (Tc tc : trAllCell) {
-                        startNum = setTcContent(tc, data, rowNum, startNum, tbNum);
-                    }
-                    rowNum++;
+    public void addTabData(WordprocessingMLPackage wordMLPackage, Map<String, Object> data) throws Docx4JException {
+        //获取所有的表格
+        List<Tbl> table = getTable(wordMLPackage);
+        int tbNum = 0;
+        //获取单个表
+        for (Tbl tbl : table) {
+            int rowNum = 0;
+            //获取所有的行
+            List<Tr> tblAllTr = getTblAllTr(tbl);
+            for (Tr tr : tblAllTr) {
+                int startNum = 0;
+                //获取所有的单元格
+                List<Tc> trAllCell = getTrAllCell(tr);
+                for (Tc tc : trAllCell) {
+                    startNum = setTcContent(tc, data, rowNum, startNum, tbNum);
                 }
-                tbNum++;
+                rowNum++;
             }
-
+            tbNum++;
+        }
     }
-
     /**
      * @Description: getTable:获取所有的表格
      * @param: wordMLPackage
@@ -90,8 +85,7 @@ public class TabTempInput {
         }
         if (obj.getClass().equals(toSearch)) {
             result.add(obj);
-        }
-        else if (obj instanceof ContentAccessor) {
+        } else if (obj instanceof ContentAccessor) {
             List<?> children = ((ContentAccessor) obj).getContent();
             for (Object child : children) {
                 result.addAll(getAllElementFromObject(child, toSearch));
@@ -152,7 +146,7 @@ public class TabTempInput {
     public void saveWordPackage(WordprocessingMLPackage wordPackage, String filePath) throws Exception {
         File file = new File(filePath);
         File fileParent = file.getParentFile();
-        if(!fileParent.exists()){
+        if (!fileParent.exists()) {
             fileParent.mkdirs();
         }
         wordPackage.save(new File(filePath));
@@ -167,10 +161,10 @@ public class TabTempInput {
      * @Author: cnbilzy
      * @Date: 2019/8/20
      */
-    public int setTcContent(Tc tc, Map<String, Object> content , int rowNum , int startNum, int tbNum) {
+    public int setTcContent(Tc tc, Map<String, Object> content, int rowNum, int startNum, int tbNum) {
         //一行数据为List
         //List<List<List<List>>> tableList = (List<List<List<List>>>) content.get("table");
-        TreeMap<String,List<List>> tableLists = (TreeMap<String,List<List>>) content.get("table");
+        TreeMap<String, List<List>> tableLists = (TreeMap<String, List<List>>) content.get("table");
         List<List> conList = null;
         String key = null;
         Set<Map.Entry<String, List<List>>> entries = tableLists.entrySet();
@@ -185,15 +179,13 @@ public class TabTempInput {
             }
             i++;
         }
-
         List<Object> pList = tc.getContent();
         //一行数据为List
         //List<List> conList = null;
         List<List> rowList = null;
         if (rowNum >= Integer.valueOf(key)) {
-            rowList =  conList.get(rowNum-Integer.valueOf(key));
+            rowList = conList.get(rowNum - Integer.valueOf(key));
         }
-        
         P p = null;
         if (pList != null && pList.size() > 0) {
             if (pList.get(0) instanceof P) {
@@ -208,23 +200,25 @@ public class TabTempInput {
         R run = new R();
         p.getContent().add(run);
         if (content != null) {
-
             //设置单元格中的值 是否存在水平、垂直合并
             TcPrInner.VMerge vm = tc.getTcPr().getVMerge();
             TcPrInner.GridSpan gridSpan = tc.getTcPr().getGridSpan();
-            if ( vm == null && gridSpan == null && p.getContent() != null) {
+            if (vm == null && gridSpan == null && p.getContent() != null) {
                 //清除获取单元格的内容 从第某一行开始
                 if (rowNum >= Integer.valueOf(key) && p.getContent() != null) {
                     //p.getContent().clear();
                     for (Object o : pList) {
-                        if (o instanceof P){
+                        if (o instanceof P) {
                             List<Object> content1 = ((P) o).getContent();
                             for (Object o1 : content1) {
-                                if (o1 instanceof R){
+                                if (o1 instanceof R) {
                                     List<Object> content2 = ((R) o1).getContent();
                                     for (Object o2 : content2) {
-                                        if (o2 instanceof  JAXBElement){
+                                        if (o2 instanceof JAXBElement) {
                                             //((JAXBElement) o2).setValue(conList.get(0).get(startNum).toString()); 一行数据一个List
+                                            if (StringUtils.isEmpty(String.valueOf(rowList.get(startNum))) || StringUtils.isBlank(String.valueOf(rowList.get(startNum)))) {
+                                                p.getContent().clear();
+                                            }
                                             ((JAXBElement) o2).setValue(rowList.get(startNum));
                                             startNum++;
                                         }
@@ -235,11 +229,7 @@ public class TabTempInput {
                     }
                 }
             }
-            
         }
-
         return startNum;
     }
-
-    
 }
