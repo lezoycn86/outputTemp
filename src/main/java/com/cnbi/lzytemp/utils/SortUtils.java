@@ -5,10 +5,8 @@ import java.util.List;
 /**
  * @Title: SortUtils
  * @Description: 排序
- * @author: cnbilzy
+ * @author: lzy
  * @date: 2019/9/5 11:50
- * @Copyright: 2019 www.cnbisoft.com Inc. All rights reserved
- * 注意：本内容仅限于安徽经邦软件有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
 public class SortUtils {
     public static List<String> listSort(List<String> input) {

@@ -51,7 +51,7 @@ public class DOCUtils {
 	 * @Description: createWordprocessingMLPackage
 	 * @param:
 	 * @Return org.docx4j.openpackaging.packages.WordprocessingMLPackage
-	 * @Author: cnbilzy
+	 * @Author: lzy
 	 * @Date: 2019/9/9
 	 */
 	public static WordprocessingMLPackage createWordprocessingMLPackage() throws Exception{
@@ -69,7 +69,7 @@ public class DOCUtils {
 	 * @Description: loadWordprocessingMLPackage 功能描述：加载文档
 	 * @param: filePath 文档路径
 	 * @Return org.docx4j.openpackaging.packages.WordprocessingMLPackage
-	 * @Author: cnbilzy
+	 * @Author: lzy
 	 * @Date: 2019/9/9
 	 */
 	public static WordprocessingMLPackage loadWordprocessingMLPackage(String filePath)throws Exception {
@@ -81,7 +81,7 @@ public class DOCUtils {
 	 * @param: wordFile
 	 * @param: password
 	 * @Return org.docx4j.openpackaging.packages.WordprocessingMLPackage
-	 * @Author: cnbilzy
+	 * @Author: lzy
 	 * @Date: 2019/9/9
 	 */
 	public static WordprocessingMLPackage loadWordPackage(File wordFile, String password) throws Exception {
@@ -94,7 +94,7 @@ public class DOCUtils {
 	 * @param: wordPackage    文档处理包对象
 	 * @param: file           文件
 	 * @Return void
-	 * @Author: cnbilzy
+	 * @Author: lzy
 	 * @Date: 2019/9/9
 	 */
 	public static void saveWordPackage(WordprocessingMLPackage wordPackage, File file) throws Exception {
@@ -201,7 +201,7 @@ public class DOCUtils {
 	 * @param: wordPackage
 	 * @param: sTBrType
 	 * @Return org.docx4j.wml.P
-	 * @Author: cnbilzy
+	 * @Author: lzy
 	 * @Date: 2019/9/9
 	 */
 	public static P addPageBreak(WordprocessingMLPackage wordPackage, STBrType sTBrType) {
@@ -369,7 +369,7 @@ public class DOCUtils {
 	/**
 	 * @Description: addLineSpace:设置段间距为0.5
 	 * @param: p
-	 * @Author: cnbilzy
+	 * @Author: lzy
 	 * @Date: 2019/7/30
 	 */
 	public static void addLineSpace (P p) {

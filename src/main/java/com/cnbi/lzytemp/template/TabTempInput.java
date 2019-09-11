@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * @Title: TabTempInput
  * @Description:
- * @author: cnbilzy
+ * @author: lzy
  * @date: 2019/8/20 15:04
  * @Copyright: 2019 www.cnbisoft.com Inc. All rights reserved
  * 水平合并标签：gridSpan  属性：w:val等于合并项
@@ -24,7 +24,7 @@ public class TabTempInput {
      * K：table
      * V: List<List<List<List>>> tableLists  ：tableLists.get(a).get(b).get(c).get(c)
      * @Return void
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/22
      */
     public void addTabData(WordprocessingMLPackage wordMLPackage, Map<String, Object> data) throws Docx4JException {
@@ -52,7 +52,7 @@ public class TabTempInput {
      * @Description: getTable:获取所有的表格
      * @param: wordMLPackage
      * @Return java.util.List<org.docx4j.wml.Tbl>
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/20
      */
     public List<Tbl> getTable(WordprocessingMLPackage wordMLPackage) throws Docx4JException {
@@ -75,7 +75,7 @@ public class TabTempInput {
      * @param: obj
      * @param: toSearch
      * @Return java.util.List<java.lang.Object>
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/20
      */
     public List<Object> getAllElementFromObject(Object obj, Class<?> toSearch) {
@@ -97,7 +97,7 @@ public class TabTempInput {
      * @Description: getTblAllTr :获取所有的行
      * @param: tbl
      * @Return java.util.List<org.docx4j.wml.Tr>
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/20
      */
     public List<Tr> getTblAllTr(Tbl tbl) {
@@ -118,7 +118,7 @@ public class TabTempInput {
      * @Description: getTrAllCell:获取所有的单元格
      * @param: tr
      * @Return java.util.List<org.docx4j.wml.Tc>
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/20
      */
     public List<Tc> getTrAllCell(Tr tr) {
@@ -140,7 +140,7 @@ public class TabTempInput {
      * @param: wordPackage
      * @param: filePath
      * @Return void
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/19
      */
     public void saveWordPackage(WordprocessingMLPackage wordPackage, String filePath) throws Exception {
@@ -158,7 +158,7 @@ public class TabTempInput {
      * @param: startNum :当前单元格在本行所有不跨行、列的单元格的位置
      * @param: conten     Map<String, List> content 插入的数据
      * @Return void
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/20
      */
     public int setTcContent(Tc tc, Map<String, Object> content, int rowNum, int startNum, int tbNum) {

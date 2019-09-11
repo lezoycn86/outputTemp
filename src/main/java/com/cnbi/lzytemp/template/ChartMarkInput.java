@@ -31,10 +31,8 @@ import java.util.*;
 /**
  * @Title: CharMarkUtil：书签以及图表插入
  * @Description:
- * @author: cnbilzy
+ * @author: lzy
  * @date: 2019/8/15 16:58
- * @Copyright: 2019 www.cnbisoft.com Inc. All rights reserved
- * 注意：本内容仅限于安徽经邦软件有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
 public class ChartMarkInput {
     /**
@@ -45,7 +43,7 @@ public class ChartMarkInput {
      * K为chart
      * V为List<List<String[]>> listData：listData.get(a).get(b)[c] a表示地几个图表，b是第几行
      * @Return void
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/22
      */
     public void insertChart(WordprocessingMLPackage wordMLPackage, Map<String, Object> data) throws Exception {
@@ -86,7 +84,7 @@ public class ChartMarkInput {
      * @param: data
      * @param: charNum
      * @Return int
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/22
      */
     public int xlsheet(SpreadsheetMLPackage sheetMLP, Map<String, Object> data, int charNum) throws Docx4JException {
@@ -154,7 +152,7 @@ public class ChartMarkInput {
      * @param: data
      * @param: charNum
      * @Return void
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/22
      */
     public void updateChart(CTChartSpace chartSpace, Map<String, Object> data, int charNum) {
@@ -208,7 +206,7 @@ public class ChartMarkInput {
      * V ：Map :K:书签名 V：插入的内容
      * @param: wPackage
      * @Return void
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/22
      */
     public void insertWords(Map<String, Object> data, WordprocessingMLPackage wPackage) throws Exception {
@@ -265,7 +263,7 @@ public class ChartMarkInput {
      * @param: wordPackage
      * @param: filePath
      * @Return void
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/8/19
      */
     public void saveWordPackage(WordprocessingMLPackage wordPackage, String filePath) throws Exception {
@@ -282,7 +280,7 @@ public class ChartMarkInput {
      * @param: p一行所在的P
      * @param: content：源数据
      * @Return java.util.Map
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/9/11
      */
     public Map traversingMark(P p, Map content) {
@@ -321,7 +319,7 @@ public class ChartMarkInput {
      * @param: starts：已经替换过的书签
      * @param: content：源数据
      * @Return java.util.Map
-     * @Author: cnbilzy
+     * @Author: lzy
      * @Date: 2019/9/11
      */
     public Map deleteMb(List<CTBookmark> starts, Map content) {
