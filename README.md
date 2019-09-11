@@ -72,5 +72,4 @@
                 listChart.add(charList3);
                 data.put("chart",listChart);
                 return data;
-        
-            }   
+                }
