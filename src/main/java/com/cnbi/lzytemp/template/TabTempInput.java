@@ -164,20 +164,21 @@ public class TabTempInput {
     public int setTcContent(Tc tc, Map<String, Object> content, int rowNum, int startNum, int tbNum) {
         //一行数据为List
         //List<List<List<List>>> tableList = (List<List<List<List>>>) content.get("table");
-        TreeMap<String, List<List>> tableLists = (TreeMap<String, List<List>>) content.get("table");
+        List<TreeMap<String, List<List>>> tableLists1 =(List<TreeMap<String, List<List>>>) content.get("table");
+        TreeMap<String, List<List>> tableLists = tableLists1.get(tbNum);
         List<List> conList = null;
         String key = null;
         Set<Map.Entry<String, List<List>>> entries = tableLists.entrySet();
         int i = 0;
         for (Map.Entry<String, List<List>> entry : entries) {
             //获取第几张表格
-            if (i == tbNum) {
+            //if (i == tbNum) {
                 //key表示从第几行开始
-                key = entry.getKey();
+            key = entry.getKey();
                 //整张表数据
-                conList = entry.getValue();
-            }
-            i++;
+            conList = entry.getValue();
+            //}
+            //i++;
         }
         List<Object> pList = tc.getContent();
         //一行数据为List

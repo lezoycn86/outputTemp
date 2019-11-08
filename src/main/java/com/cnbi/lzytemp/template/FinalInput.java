@@ -13,7 +13,7 @@ public class FinalInput {
     final static String CHART = "chart";
     final static String BOOKMARK = "bookmark";
     final static String TABLE = "table";
-    public static WordprocessingMLPackage output(String inputfilepath, Map<String, Object> data) throws Exception {
+    public WordprocessingMLPackage output(String inputfilepath, Map<String, Object> data) throws Exception {
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new java.io.File(inputfilepath));
         //向图表中添加数据
         ChartMarkInput chartMarkInput = new ChartMarkInput();
@@ -39,17 +39,19 @@ public class FinalInput {
         SimpleDateFormat sdf = new SimpleDateFormat("", Locale.SIMPLIFIED_CHINESE);
         sdf.applyPattern("yyyy年MM月dd日HH时mm分ss秒");
         String outputfilepath = "F:/docx4j/test_" + sdf.format(System.currentTimeMillis()) + ".docx";
-        WordprocessingMLPackage output = output(inputfilepath, data());
+        /*WordprocessingMLPackage output = output(inputfilepath, data());
         //添加页眉
         DOCUtils.createHeader(output, "(1001) 天津食品集团有限公司（合并）2019年8月风险报告", RIGHT);
         ChartMarkInput charMarkInput = new ChartMarkInput();
-        charMarkInput.saveWordPackage(output, outputfilepath);
+        charMarkInput.saveWordPackage(output, outputfilepath);*/
     }
     public static Map<String, Object> data() {
         //添加的数据
         Map<String, Object> data = new HashMap<>(3);
         //表格数据
-        TreeMap<String, List<List>> tableTrees = new TreeMap<>();
+        TreeMap<String, List<List>> tableTree1 = new TreeMap<>();
+        TreeMap<String, List<List>> tableTree2 = new TreeMap<>();
+        List<TreeMap<String, List<List>>> tableLists = new ArrayList<>();
         List<List> tableList1 = new ArrayList<>();
         List<List> tableList2 = new ArrayList<>();
         List<String> list1 = new ArrayList<>();
@@ -85,9 +87,11 @@ public class FinalInput {
         tableList2.add(list3);
         tableList2.add(list4);
         //key从第几行填入数据 0是第一行
-        tableTrees.put("1", tableList1);
-        tableTrees.put("2", tableList2);
-        data.put("table", tableTrees);
+        tableTree1.put("1", tableList1);
+        tableTree2.put("2", tableList2);
+        tableLists.add(tableTree1);
+        tableLists.add(tableTree2);
+        data.put("table", tableLists);
         //书签数据
         Map<String, String> content = new HashMap<>();
         content.put("table1", "表格1");
